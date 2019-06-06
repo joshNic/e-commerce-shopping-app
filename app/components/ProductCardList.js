@@ -28,16 +28,6 @@ const ProductCardList = props => {
             }}
             style={{ width: 150, height: 150 }}
           />
-          {/* <Button
-            buttonStyle={{
-              borderRadius: 0,
-              marginLeft: 0,
-              marginRight: 0,
-              marginBottom: 0,
-              backgroundColor: 'orange'
-            }}
-            title='View Details'
-          /> */}
         </Card>
       </View>
     </TouchableWithoutFeedback>

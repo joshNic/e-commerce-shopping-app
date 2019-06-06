@@ -14,12 +14,17 @@ import {
   Body,
   Right
 } from 'native-base';
+import CartIcon from '../components/CartIcon';
+import { connect } from 'react-redux';
+import { addItemToCart } from '../actions/action';
 
-export default class ProductDetailScreen extends Component {
+class ProductDetailScreen extends Component {
   static navigationOptions = {
-    headerTitle: 'Product Details'
+    headerTitle: 'Product Details',
+    headerRight: <CartIcon />
   };
   render() {
+    //console.log(this.props);
     let productId = this.props.navigation.getParam('product_id', 'NO Product');
     let productPrice = this.props.navigation.getParam(
       'price',
@@ -38,15 +43,19 @@ export default class ProductDetailScreen extends Component {
       'image',
       'NO Product Image'
     );
+
+    const products = {
+      id: productId,
+      name: productName,
+      image: productImage,
+      description: productDescription,
+      discount: productDiscount,
+      price: productPrice
+    };
+
     return (
       <Container>
         <Content>
-          {/* <Text> {productId} </Text>
-          <Text> {productPrice} </Text>
-          <Text> {productDiscount} </Text>
-          <Text> {productName} </Text>
-          <Text> {productImage} </Text>
-          <Text> {productDescription} </Text> */}
           <Card>
             <CardItem>
               <Left>
@@ -81,7 +90,7 @@ export default class ProductDetailScreen extends Component {
               <Text>Price: {productPrice}</Text>
 
               <Right>
-                <Button transparent>
+                <Button onPress={() => this.props.addItemToCart(products)}>
                   <Text>Add to cart</Text>
                 </Button>
               </Right>
@@ -95,3 +104,23 @@ export default class ProductDetailScreen extends Component {
     );
   }
 }
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     addItemToCart: product => dispatch(addItemToCart(product))
+//   };
+// };
+
+const mapDispatchToProps = {
+  addItemToCart: product => addItemToCart(product)
+};
+const mapStateToProps = ({ shop }) => {
+  return {
+    cartItems: shop.cartItems
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductDetailScreen);
