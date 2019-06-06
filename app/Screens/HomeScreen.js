@@ -5,39 +5,25 @@ import { Card, ListItem, Button, Icon, Image } from 'react-native-elements';
 import { getProducts } from '../api';
 import ProductCardList from '../components/ProductCardList';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { getAllProducts } from '../actions/action';
+import { connect } from 'react-redux';
 
-export default class HomeScreen extends Component {
-  state = {
-    loading: false
-  };
-
+class HomeScreen extends Component {
   componentDidMount() {
-    return fetch(
-      'https://mobilebackend.turing.com/products?page=1&limit=20&description_length=200'
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          loading: true,
-          products: Array.from(responseJson.rows)
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    const { getAllProducts } = this.props;
+    getAllProducts();
   }
 
   render() {
-    console.log(this.state.products);
-    const { navigate } = this.props.navigation;
+    const { products, loading, navigation } = this.props;
     return (
       <View>
-        {this.state.loading && (
+        {!loading && (
           <FlatList
-            data={this.state.products}
+            data={products}
             renderItem={({ item }) => (
               <ProductCardList
-                navigate={navigate}
+                navigate={navigation.navigate}
                 name={item.name}
                 thumbnail={item.thumbnail}
                 product_id={item.product_id}
@@ -50,7 +36,7 @@ export default class HomeScreen extends Component {
             numColumns={2}
           />
         )}
-        {!this.state.loading && (
+        {loading && (
           <View>
             <Spinner visible={true} textContent={'Loading...'} />
           </View>
@@ -59,6 +45,20 @@ export default class HomeScreen extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  products: state.shop.products,
+  loading: state.shop.loading
+});
+
+export const mapDispatchToProps = dispatch => ({
+  getAllProducts: () => dispatch(getAllProducts())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {

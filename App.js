@@ -9,15 +9,23 @@ import {
 import Feed from './app/Screens/HomeScreen';
 import Icon from '@expo/vector-icons/Ionicons';
 import ProductDetailScreen from './app/Screens/ProductDetailScreen';
+import { Provider } from 'react-redux';
+import CartScreen from './app/Screens/CartScreen';
 // import DashboardScreen from './app/Screens/DashboardScreen';
 // import WelcomeScreen from './app/Screens/WelcomeScreen';
 
 // import SettingsScreen from './app/Screens/SettingsScreen';
 import { Text, View, StyleSheet, Button } from 'react-native';
+import CartIcon from './app/components/CartIcon';
+import store from './app/store';
 
 export default class App extends Component {
   render() {
-    return <AppContainer />;
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
   }
 }
 
@@ -102,6 +110,7 @@ const detailStackNavigator = createStackNavigator(
             />
           ),
           headerTitle: 'Feed',
+          headerRight: <CartIcon />,
           headerBackTitle: null,
           headerStyle: {
             backgroundColor: 'orange'
@@ -111,6 +120,9 @@ const detailStackNavigator = createStackNavigator(
     },
     ProductDetailScreen: {
       screen: ProductDetailScreen
+    },
+    CartScreen: {
+      screen: CartScreen
     }
   },
   {
@@ -202,6 +214,7 @@ const dashboardStackNavigator = createStackNavigator(
             size={30}
           />
         ),
+
         headerStyle: {
           backgroundColor: 'orange'
         }
